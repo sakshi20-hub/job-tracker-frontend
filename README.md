@@ -40,7 +40,7 @@ A professional, dashboard-style React frontend for tracking job applications, mo
 ## Folder Structure
 
 ```
-client/
+
 ├── public/
 │   └── favicon.svg
 ├── src/
@@ -95,7 +95,7 @@ client/
 
 - Node.js **v18 or higher**
 - npm v9+
-- The backend server running (see [server README](../server/README.md))
+- The backend server running
 
 ---
 
@@ -104,7 +104,7 @@ client/
 ### 1. Navigate to the client folder
 
 ```bash
-cd client
+cd job-tracker-frontend
 ```
 
 ### 2. Install dependencies
@@ -238,11 +238,6 @@ The backend `CLIENT_URL` env variable must match your frontend origin exactly, i
 **`npm run dev` fails immediately**
 Ensure Node.js v18+ is installed: `node -v`. If below v18, upgrade via [nodejs.org](https://nodejs.org).
 
-**Vite HMR not updating**
-Try stopping the dev server, deleting `node_modules/.vite`, and restarting with `npm run dev`.
-
-**Date fields showing wrong day**
-All dates are stored as ISO strings in MongoDB. The `formatDate()` helper in `utils/helpers.js` uses `parseISO()` from date-fns to correctly parse them without timezone shifting.
 
 ---
 
