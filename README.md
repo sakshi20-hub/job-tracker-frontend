@@ -172,76 +172,7 @@ The app runs at **http://localhost:5173**
 
 ---
 
-## Design System
 
-All design tokens are defined in `tailwind.config.js` and `index.css`.
-
-**Colors**
-
-| Role | Class | Hex |
-|------|-------|-----|
-| Primary | `blue-600` | `#2563eb` |
-| Sidebar background | `slate-900` | `#0f172a` |
-| Page background | `slate-50` | `#f8fafc` |
-| Card background | `white` | `#ffffff` |
-| Applied status | `blue-700` | — |
-| OA status | `purple-700` | — |
-| Interview status | `amber-700` | — |
-| Rejected status | `red-700` | — |
-| Accepted status | `green-700` | — |
-
-**Reusable CSS component classes** (defined in `index.css`):
-
-```
-.input-base     — Standard form input with focus ring
-.btn-primary    — Blue filled button
-.btn-secondary  — White bordered button
-.btn-danger     — Red filled button (delete actions)
-.card           — White rounded card with border and shadow
-.label          — Form field label
-.page-title     — Page heading (xl, semibold)
-.section-title  — Section heading (base, semibold)
-```
-
----
-
-## Authentication Flow
-
-```
-User visits app
-  └── AuthContext reads token from localStorage
-        ├── Token found → render protected page
-        └── No token   → redirect to /login
-
-Login / Register
-  └── POST /api/auth/login (or /register)
-        └── Response: { token, _id, name, email }
-              ├── token → localStorage
-              ├── user  → localStorage + AuthContext state
-              └── Navigate to /dashboard
-
-Axios interceptor on every request
-  └── Reads token from localStorage
-        └── Sets Authorization: Bearer <token> header
-
-Axios interceptor on 401 response
-  └── Clears localStorage
-        └── Redirects to /login
-```
-
----
-
-## Key Component Decisions
-
-**`ApplicationForm.jsx` is shared** between Add and Edit pages. It accepts `initialData` and pre-fills via `toInputDate()` for date inputs. Empty `interviewDate` is sent as `null` to the API.
-
-**`/applications/stats` is fetched separately** on the Dashboard using `Promise.all` on the server, so the dashboard load is a single request returning all stats, chart data, and upcoming interviews together.
-
-**Search is debounced** in `Applications.jsx` — a 350ms `setTimeout` prevents an API call on every keystroke. Other filter changes (status, jobType, sort) fire immediately.
-
-**`/stats` route is declared before `/:id`** in the backend router. This is intentional — Express matches routes top-to-bottom and `stats` would otherwise be treated as an ID parameter.
-
----
 
 ## Deployment on Vercel
 
@@ -315,17 +246,9 @@ All dates are stored as ISO strings in MongoDB. The `formatDate()` helper in `ut
 
 ---
 
-## Interview Talking Points
+## Live Demo
 
-- **Context API over Redux** — The app state is limited to auth user and per-page data fetching, so Context API is sufficient without the overhead of Redux. If the app grew to share application state across many unrelated components, Redux Toolkit would be the next step.
-- **Axios interceptors** — Centralised token injection and 401 handling means no auth boilerplate in individual components.
-- **Shared form component** — `ApplicationForm` is used for both Add and Edit with an `initialData` prop, demonstrating component reusability and the DRY principle.
-- **Server-side filtering** — Search, filter, and sort are handled by the API with query params, not client-side array filtering. This scales to large datasets correctly.
-- **`vercel.json` rewrite rule** — Required for any React SPA on Vercel. Without it, direct URL access or page refresh on any route except `/` returns a 404 from the CDN.
-- **Debounced search** — Prevents excessive API calls while the user is still typing, reducing server load and improving UX.
+Frontend: https://job-tracker-frontend-tawny.vercel.app
+Backend API: https://job-tracker-backend-1bqv.onrender.com/api
 
----
 
-## License
-
-MIT — free to use for personal projects and portfolio.
